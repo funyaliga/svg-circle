@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>svg-circle</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    svg{
+      width: 920px;
+      height: 920px;
+    }
+    .m-tool{
+      position: fixed;
+      bottom: 0;
+      top: 0;
+      right: 0;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, .2);
+      padding: 12px;
+    }
+    label{
+      display: block;
+      width: 300px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+    }
+    .l{
+      width: 6em;
+    }
+    .t{
+      padding: 0 8px;
+    }
+    /* path{
+      transition: stroke-dasharray .1s;
+    } */
+
+    .m-modal{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mask{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .modal-bd{
+      position: relative;
+      width: 80%;
+      min-height: 80%;
+      background: #fff;
+      border-radius: 6px;
+      display: flex;
+    }
+    dl{
+      flex: 1;
+      padding: 10px;
+    }
+    dl:not(:last-child) {
+      border-right: 1px dashed #999;
+    }
+    dt{
+      font-size: 1.5em;
+      display: flex;
+      align-items: center;
+    }
+    dd{
+      margin-top: 10px;
+      word-break: break-word;
+    }
+    .show{
+      padding: 6px 50px;
+      background: #ea5959;
+      color: #fff;
+      border-radius: 4px;
+      font-size: 1.1em;
+      border: none;
+    }
+    .copy{
+      margin-left: 8px;
+      padding: 4px 12px;
+      background: #ea5959;
+      color: #fff;
+      border-radius: 4px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="m-view" ref="view">
+    <svg :width="width" :height="width" xmlns="http://www.w3.org/2000/svg">
+      <path id="arc1" fill="none" :stroke="backgroundColor" :stroke-width="border" :d="d"  />
+      <path id="arc2" fill="none" :stroke="foregroundColor" :stroke-width="border" :d="d" :stroke-dasharray="dasharray"  />
+    </svg>
+  </div>
+  <div class="m-tool">
+    <label>
+      <span class="l">半径</span>
+      <input type="range" min="60" max="400" v-model="radius">
+      <span class="t">{{radius}}</span>
+    </label>
+    <label>
+      <span class="l">边框厚度</span>
+      <input type="range" min="10" :max="60" v-model="border">
+      <span class="t">{{border}}</span>
+    </label>
+    <label>
+      <span class="l">开始角度</span>
+      <input type="range" min="-180" max="180" v-model="startAngle">
+      <span class="t">{{startAngle}}</span>
+    </label>
+    <label>
+      <span class="l">结束角度</span>
+      <input type="range" min="-180" max="180" v-model="endAngle">
+      <span class="t">{{endAngle}}</span>
+    </label>
+    <label>
+      <span class="l">顺时针:</span>
+      <input type="checkbox" v-model="sweepFlag">
+    </label>
+    <label>
+      <span class="l">背景色</span>
+      <input type="color" v-model="backgroundColor">
+    </label>
+    <label>
+      <span class="l">前景色</span>
+      <input type="color" v-model="foregroundColor">
+    </label>
+    <label>
+      <span class="l">百分比</span>
+      <input type="range" min="0" max="100" v-model="percent">
+      <span class="t">{{percent}}%</span>
+    </label>
+    <button class="show" @click="showCode">生成</button>
+  </div>
+  {{show}}
+  <div v-if="show" class="m-modal">
+    <div class="mask" @click.self="hide"></div>
+    <div class="modal-bd">
+      <dl>
+        <dt>Svg <button class="copy" :data-clipboard-text="svg">复制</button></dt>
+        <dd><code>{{svg}}</code></dd>
+      </dl>
+      <dl>
+        <dt>Base64 <button class="copy" :data-clipboard-text="base64Svg">复制</button></dt>
+        <dd><code>{{base64Svg}}</code></dd>
+      </dl>
+      <dl>
+        <dt>CSS转义 <button class="copy" :data-clipboard-text="encodeSvg">复制</button></dt>
+        <dd><code>{{encodeSvg}}</code></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+
+  <script src="./vue.min.js"></script>
+  <script src="./clipboard.min.js"></script>
+  <script src="./svgo.js"></script>
+  <script src="./js.js"></script>
+</body>
+</html>
